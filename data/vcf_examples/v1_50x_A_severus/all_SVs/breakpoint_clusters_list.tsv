@@ -1,0 +1,5 @@
+#cluster_id	type	Junction_type	SVs	SV_count	genome_ids	
+severus_0	complex	HT:9 	DEL:9 	9	tumour.bam	
+severus_1	complex	HT:3 	DEL:3 	3	tumour.bam,sim.srt.bam	
+severus_2	complex	HT:1 ,TH:1 	DEL:1 ,Templated_ins:1 	2	tumour.bam	
+severus_17	complex	Interchr:2 	Reciprocal_tra:2 	2	tumour.bam	

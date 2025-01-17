@@ -1,0 +1,11 @@
+Location,Type,30x_A,30x_B,30x_C,50x_A,50x_B,50x_C,100x_A,100x_B,100x_C,200x_A,200x_B,200x_C
+Chr1:141380486-153352930:H1,Tandem duplication,0,0,0,0,0,0,0,0,0,0,0,0
+Chr6:148500001-152100000:H1,Inversion,0,0,0,0,0,0,0,0,0,0,0,0
+Chr9:21970752-22002023:H1,Translocation cut-paste ,0,0,0,0,0,0,0,0,0,0,0,0
+Chr9:21967754(reverse):H2,Translocation cut-paste,0,0,0,0,0,0,0,0,0,0,0,0
+Chr12:25205246-25250929:H1,Translocation copy-paste,0,0,0,0,0,0,0,0,0,0,0,0
+Chr12:25250931(forward):H2,Translocation copy-paste,0,0,0,0,0,0,0,0,0,0,0,0
+Chr14:105541351-107043718(forward):H1,Reciprocal translocation,0,0,0,0,0,0,0,0,0,0,0,0
+chr11:69285116(forward):H1,Reciprocal translocation,0,0,0,0,0,0,0,0,0,0,0,0
+Chr17:7616429-7850991,Deletion,0,0,0,0,0,0,0,0,0,0,0,0
+None,False Positives,133,123,119,38,46,47,25,15,19,24,22,24

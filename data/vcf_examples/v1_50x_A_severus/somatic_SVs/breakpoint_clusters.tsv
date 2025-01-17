@@ -1,0 +1,3 @@
+#cluster_id	adj_1-tadj_2	read_support	vaf	genotype	sv_type	det_sv_type	direction	bnd	phaseblock	genome_ids
+severus_0	+chr11:69285116|-chr14:105541350	17	0.32075471698113206	hom	BND	Reciprocal_tra	HT	inter		tumour.bam
+severus_0	-chr11:69285116|+chr14:105541350	25	0.4098360655737705	hom	BND	Reciprocal_tra	TH	inter		tumour.bam

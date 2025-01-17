@@ -1,0 +1,475 @@
+\chapter{Discussion}
+
+\section{Computational and Resource Requirements}
+
+The synthetic data analysis configuration in this project demanded substantial 
+computational resources: 14 TB of storage (2.73\% of CNIO's HPC cluster 
+capacity) and 832 cores for VISOR-LASeR execution (52 cores per sample, 
+exceeding 114\% of available cores). Furthermore, the single-job-per-GPU 
+restriction for SVision-pro execution led to extended processing times. This 
+intensive resource utilization presented significant challenges given the 
+cluster's shared nature among multiple CNIO research groups and projects.
+These findings emphasize that computational tool selection should consider not 
+only accuracy but also efficient resource management based on available 
+computing resources as critical evaluation criteria.
+
+% TB of storage (8\% of CNIO's HPC cluster capacity) and 832 cores for VISOR-LASeR 
+% execution (52 cores per sample, exceeding 114\% of available cores). 
+% Furthermore, the single-job-per-GPU restriction for SVision-pro execution led to 
+% extended processing times. This intensive utilization presented significant 
+% challenges given the cluster's shared nature among multiple CNIO research groups 
+% and projects. These findings emphasize that computational tool selection should 
+% consider not only accuracy but also efficient resource management as critical 
+% evaluation criteria.
+
+% Los datos sintéticos generados han requerido 40 TB de almacenamiento, lo cual 
+% supone alrededor del 8\% del volumen de almacenamiento disponible del HPC 
+% cluster del CNIO. En relación a los recursos de cómputo, la ejecución de 
+% VISOR-Laser para generar el dataset de 16 ficheros BAM demanda el uso de 832 
+% cores (52 por muestra), lo cual supone el 114\% de los disponibles en el cluster.
+% Todo ello, sumado a que el sistema de gestión de trabajos impide la ejecución 
+% de más de un trabajo en cada GPU (usada en este caso para la ejecución de 
+% SVision-pro) suponen una elevado demanda de unos recursos computacionales
+% disponibles y demandados por grupos y proyectos de investigación de todo el CNIO. 
+
+\section{Simulation Design and Parameters}
+
+The selection of SVs for simulation was influenced by ongoing research in the 
+CNIO Bioinformatics Unit's long-reads group, specifically their collaboration 
+with Hospital 12 de Octubre's Hematological Malignancies group on WGS of MM 
+patient samples, comparing pre-treatments and relapses. Consequently, the SV 
+set includes both characteristic MM variants and more speculative cancer-related 
+SVs to cover a broader spectrum of SVs. Despite the availability of 
+T2T genomes, GRCh38 was chosen as the reference genome due to its extensive use 
+in research and the substantial accumulation of annotation-associated findings 
+throughout its trajectory.
+
+The SV simulation was configured to represent bulk sequencing of a homogeneous 
+cell population containing a single clone, with all variant allele frequencies 
+(VAFs) set to 0.5. This configuration ensures variants are present on one allele 
+and represented in half of the generated sequencing reads. Such design aimed to 
+provide clear variant representation in the reads, theoretically ensuring 
+reliable detection by callers while facilitating visual validation through GW. 
+However, this idealized scenario differs from real tumor samples, where variant 
+allele frequencies can vary significantly due to tumor heterogeneity and normal 
+cell contamination \cite{dagogo-jack_tumour_2018}.
+
+Reads were simulated with a mean length of 15,000 bp and a standard deviation of 
+13,000 bp, using VISOR-LASeR default settings. These parameters align with 
+realistic values obtainable through actual sequencing using the PromethION 
+platform's protocol for 10 kb human DNA with Ligation Sequencing Kit V14 
+\cite{noauthor_ligation_2022}, which has been selected for sequencing the MM
+patient samples. Notably, this protocol aims to generate $\sim$30-40x genome 
+coverage. Our benchmarking results at higher coverages (100x and 200x) showed 
+no substantial performance improvements for any caller in detecting simulated 
+SVs, suggesting that the additional costs and efforts associated with using 
+multiple flow cells and preparing larger sample quantities may not be justified. 
+However, Severus detected unplanned VNTR anomalies at lower coverages (30x and 50x), 
+introduced by the Badread error model trained on ONT R10.4.1 reads. This 
+observation is crucial for real sample sequencing: while such artifacts were 
+more prevalent in R9.4 reads (see \textbf{Figure \ref{fig:ont_pores}}), 
+they might still influence SV calling results, as even a small number of reads 
+containing these sequencing artifacts could be considered representative by 
+callers at the coverage levels currently achievable with a single flowcell.
+
+% Sin embargo, 
+% Severus detectó anomalías no planificadas dentro de VNRTs en las coverages más 
+% bajas (30x y 50x), añadidas por el modelo de error de Badread entrenado con 
+% trained on ONT R10.4.1 reads.
+
+% las lecturas fueron simuladas a una longitud promedio de 15000 pb y una 
+% desviación estandar de 13000, valores por defecto de VISOR-LASeR. Estos valores 
+% entran dentro de lo razonablemente obtenible con secuenciación real with the 
+% protocol for sequencing 10 kb human DNA on PromethION using the Ligation 
+% Sequencing Kit V14. Dicho kit es el seleccionado para la secuenciación de las
+% muestras de pacientes con Mieloma Múltiple.
+
+% Para la simulación de las SVs se ajustó que las muestras correspondiesen a la 
+% secuenciación bulk de una población celular compuesta por un solo clon cuyas 
+% variant allele frequency son todas iguales a 0.5, lo cual se traduce en que 
+% las variante está presente en uno de los dos alelos así como en la mitad de 
+% de las lecturas de secuenciación generadas. Con esta configuración se buscaba 
+% que las SVs introducidas tuviesen una representatividad en las lecturas bastante 
+% evidente para los callers, la cual teoricamnete garantizaría su identificación
+% a la par de que facilitar enormemente comprobarlas visualmente a través de GW.
+
+% Es necesario tener en cuenta esto a la hora de 
+% secuenciar muestras reales, este tipo de artefactos en muestras reales 
+% eran mucho más frecuentes en R9.4 reads pero podrían seguir apareciendo en los
+% SV callings debido a que en el rango de coverages que se pueden actualmente
+% obtener con una flowcell pocas lecturas con estos artefactos de secuenciación 
+% pueden ser representativas para el caller.
+
+% La selección de las SVs para las simulaciones viene influenciada por la línea
+% de trabajo del grupo de trabajo de long-reads of CNIO Bioinformatics Unit
+% durante el desarrollo de este proyecto, concretamente a Set of pre-treatments 
+% and relapses WGS samples from Multiple Myeloma (MM) patients en colaboración con 
+% el grupo de Hemato Malignancies del Hospital 12 de Octubre. Es por ello que el 
+% set de SVs incluye algunas típicas de MM así como otras relacionadas con 
+% cáncer más especulativas con las que cubrir otros tipos de SVs. También es la
+% razón por la que a pesar de la existencia de genomas T2T, se trabajó con el 
+% genoma de referencia GRCh38 que sigue siendo la opción preferente en 
+% investigación debido a que en su larga trayectoria se han acumulado gran 
+% cantidad de resultados asociados a las anotaciones de esta referencia.
+
+\section{SV Caller Performance and Limitations}
+
+Performance metrics position SAVANA as the top performer, yet its limitation to 
+breakpoint correlation without SV classification represents a significant 
+drawback. This limitation, combined with substantially higher RAM consumption 
+and execution times compared to other callers, impacts its practical utility. 
+Severus, despite slightly lower precision, matches SAVANA's recall while 
+maintaining lower RAM usage and provides comprehensive SV classification 
+alongside visual representations of chromosomal rearrangements. These 
+characteristics likely influenced Severus's integration into the latest EPI2ME 
+release, Oxford Nanopore's open-source platform designed to provide wet lab 
+scientists with a user-friendly interface for data analysis without requiring 
+advanced bioinformatics skills. However, despite its integration, EPI2ME's 
+documentation lacks comparative analyses justifying Severus's selection over 
+other SV callers, possibly due to its target audience 
+\cite{oxford_nanopore_technologies_epi2me_nodate}.
+
+% Esto da posible
+% idea de por qué Severus fue integrado en la ultima release de EPI2ME, una 
+% plataforma opensoruce tras la cual está Oxford Nanopore con el objetivo de 
+% proveer a los wet lab scientist de una interfaz amigable con la que poder 
+% analizar sus datos sin necesidades de habilidades bioinformáticas avanzadas, sin 
+% empargo (quizás por el publico al que se dirige) no se encontraron en su página 
+% web recursos relacionados con comparativas entre SV callers que justifiquen la 
+% elección de esta herramienta  
+
+% The open-source EPI2ME platform enhances global access to best-practice 
+% analysis workflows, irrespective of bioinformatics expertise. It allows us 
+% to deploy, community-standardised software solutions, tailored to the needs of 
+% our research projects.
+
+Our evaluation employed minimum argument sets for all callers, relying on 
+developer-configured default parameters for complex adjustments. This 
+standardized approach may explain the poor performance of Sniffles2 and 
+SVision-pro, particularly in detecting large SVs, as default settings might not 
+be optimized for such variants. Notably, following our analysis, Sniffles2 
+version 2.5 released improvements specifically targeting detection of large 
+deletions and duplications ($>$ 50 kb) \cite{noauthor_releases_nodate}. 
+Interestingly, the better-performing tools in our analysis (SAVANA and Severus) 
+remain available only in preprint servers, while Sniffles2 and SVision-pro are 
+published in peer-reviewed journals.
+
+% Las métricas de calling performance posicionan a SAVANA como el mejor de 
+% de todos, sin embargo el hecho de que solo sea capaz de correlacionar los 
+% breakpints sin llegar a clasificar el tipo de SVs subyacentes es una gran 
+% desventaja a la cual se une el muy superior consumo de memoria RAM y tiempo De
+% ejecución frente al resto de SV callers. Severus con una precisión ligeramente 
+% menor pero mismo recall y menor consumo de RAM, sí que es capaz de identificar 
+% el tipo de SV generando además plots para facilitar la comprensión de 
+% reordenamientos cromosómicos detectados. 
+
+% La ejecución de los SV callers se llevo a cabo incluyendo minumum set of 
+% arguments, lo que conlleva a que muchos parámetros complejos de ajuste de estas 
+% herramientas recaigan en valores y opciones preconfiguradas por los 
+% desarrolladores de dichas herramientas. Una posible causa del deficiente 
+% rendimiento de Sniflles2 y SVision-pro puede ser es la baja idoneidad de estos
+% preajustes para la busqueda de SVs muy grandes. Cabe destacar que
+% Las versiones de los callers están en constante renovación/actualización y en 
+% este sentido con relación a Sniffles2, tras la ejecución de los análisis 
+% realizados para este proyecto declaró en el lanzamiento de su versión 2.5 una 
+% mejora en la detección de grandes delecciones y duplicaciones >50 kb. No
+% obstante, es llamativo el hecho de que tanto Sniffles2 como SVision-pro sean las 
+% herramientas ya publicadas en revistas científicas con revisión por
+% pares, mientras que SAVANA y Severus solo están disponibles en preprint servers.
+
+\section{Clinical Relevance and Technical Challenges}
+
+VISOR toolkit proved valuable for evaluating SV callers' capability to identify 
+characteristic large structural events in Multiple Myeloma using ONT long reads, 
+particularly those with diagnostic significance. Through synthetic data 
+generation, we successfully validated the detection of two of the most frequent 
+chromosomal aberrations in Multiple Myeloma, notably the largest SVs in our 
+simulation set, using SAVANA and Severus: the tandem amplification of 1q21+ 
+(100 Mb) and an IGH-involving translocation (1,5 Mb). These structural variants, 
+currently verified in clinical settings through FISH due to the limitations of 
+short-read sequencing assembly, represent critical diagnostic markers that could 
+potentially be identified through long-read sequencing approaches.
+
+The inability to simulate certain SVs provides valuable insights into technical 
+limitations. While VISOR-HACk module unambiguously inserts all chromosomal 
+abnormalities into a FASTA file using BED-formatted instructions and the 
+reference genome as a template, challenges emerge in the VISOR-LASeR module,
+which generates and aligns reads to the reference genome using minimap2. These 
+limitations manifest in two ways: standard read lengths may be insufficient for 
+reconstructing certain events, suggesting the potential need for ultra-long read 
+protocols capable of generating sequences up to 4 Mb, and minimap2 alignment 
+accuracy may be compromised for complex variants. For instance, in the 
+copy-paste translocation designed to generate a proximal KRAS duplicate, the 
+aligner appears to have defaulted to mapping all reads to the original gene 
+position. Similarly, for the cut-paste translocation, only the deletion 
+component was detected, while the inverted sequence insertion failed to be 
+properly positioned, leaving its corresponding reads unaccounted for in the 
+alignment.
+
+% El no haber sido capaz de generar algunas SVs es también bastante interesante.
+% El módulo VISOR-HACk inserta inequívocamente todas las anomalías cromosómicas, 
+% a través de instrucciones en formato bed, en un fichero fasta que usa el genoma 
+% de referencia como base. El "problema" parece estar en el módulo VISOR-LASeR, 
+% que se encarga de generar lecturas y alinearlas al genoma de referencia usando 
+% minimap2. Por una parte, la longitud de las lecturas puede ser
+% demasiado limitada para reconstruir algunos eventos, lo cual en la práctica
+% real se traduciría en la necesidad de implementar protocolos para generar 
+% ultra long reads, that aims to produce lecturas de up to 4 Mb. Por otra parte y
+% de forma no excluyente con lo anterior minimap2 puede no estar alineando 
+% correctamente las lecturas; en el caso de la traslocación copy-paste con la 
+% que se pretendía generar una segunda copia cercana de KRAS, parece que el 
+% el alineador evitado la inserción a optado por alinear todas las lecturas a la 
+% altura de la posición original de este gen. De la traslocación cut-paste, solo 
+% la delección generada fue detectada, fallando nuevamente en posicionar la 
+% inserción aunque en este caso se trata de una inversión y no se aprecia dónde 
+% a podido ser reubicadas sus lecturas.
+
+% VISOR toolkit ha mostrado ser útil para interrogar sobre la capacidad de 
+% SV Callers de identificar a través de long reads de ONT grandes eventos 
+% estructurales característicos y con capacidad diagnóstica de Myeloma Multiple.
+% Se generaron datos sintéticos y se lograron identificar en ellos dos de las 
+% aberraciones cromosómicas más frecuentes en Myeloma Múltiple que son además
+% las más grandes del set de SVs simuladas, la amplificación
+% en tandem de 1q21+ (100 Mb ) y una tranlocación que involucra al gen IGH (1,5), 
+% en los SV callers SAVANA y Severus. Dichas SVs son actualmente comprobadas en 
+% clínica mediante FISH debido la imposibilidad de ensamblarlas mediante 
+% secuenciación de lecturas cortas. 
+
+% cromosómicas más caracterísiticas de esta enfermedad
+% fueron reconstruidas con datos sintéticos 
+
+% recrear aberraciones cromosómicas 
+% Cabe recordar que el módulo VISOR-HACk genera una copia en formato fasta del 
+% genoma de referencia que contiene inequívocamente los eventos estructurales que 
+% le son ordenados a través de un fichero bed y que el módulo VISOR-LASeR genera 
+% lecturas a partir de dicha copia 
+
+\section{Visualization Tools and Challenges}
+
+Initial visualization attempts of synthetic data were made using the 
+widely-adopted Integrative Genomics Viewer (IGV) version 2.17.3. However, 
+despite using chromosome-specific BAM files generated through the ``bam-splitter'' 
+workflow, IGV's performance proved inadequate, exhibiting slow loading times and 
+frequent crashes. Through email correspondence, Severus's lead developer shared 
+similar experiences with long-read BAM files in IGV, suggesting a workaround of 
+generating smaller BAM files containing only the SV regions with 1 Mb upstream 
+and downstream sequences. While this approach would have been feasible for 
+planned SVs, it proved impractical for investigating additional findings like 
+VNTR anomalies due to automation limitations.
+
+GW emerged as a capable alternative, efficiently handling both individual 
+chromosome and whole-genome BAM files. Its VCF compatibility created an 
+interactive index for rapid SV coordinate navigation, dramatically accelerating 
+event verification. However, GW requires terminal-based operation in conjunction 
+with an alignment view display, demanding more advanced computational skills 
+compared to IGV's graphical user interface \textbf{Figure~\ref{fig:GW_UI}}. 
+Nevertheless, GW's developer demonstrated strong responsiveness to error reports 
+and feature requests through Github. Our project-specific experience led to 
+reporting Conda installation \cite{noauthor_error_nodate} and loading genome
+anotation files \cite{noauthor_display_nodate} issues, and requesting vector 
+format export capabilities for alignment visualizations 
+\cite{noauthor_saving_nodate}.
+
+% En un principio, se trató de realizar la visualización de los datos sintéticos 
+% a través del popular y estandarizado Integrative Genomics Viewer 
+% (IGV) en su versión 2.17.3, sin embargo el rendimiento de esta herramienta al 
+% cargar ficheros BAM individualizados por cromosoma mediante "bam-splitter" 
+% workflow fue bastante deficiente debido a que IGV iba demasiado lento y 
+% constantly crashes. En conversaciones por mail la desarrolladora principal de 
+% Severus compartió esta misma esperiencia trabajando con Long read bam files on
+% IGV, y compartió como estrategia para mitigar este problema generate small bams 
+% only with the SVs regions and 1mb upstream and downstream. Esta estrategia 
+% habría fácilmente abarcable para el set de SVs planificadas pero en el caso de
+% allazgos adicionales como los ocurridos en las VNTRs habría requerido 
+% demasiado trabajo debido a la imposibilidad de automatización. 
+
+% GW ha demostrado ser una alternativa capaz de permitir visualizar los ficheros 
+% BAM de cromosomas sueltos e incluso ficheros de genomas completos, cuya 
+% compatibilidad con ficheros VCF con los SV callings para generar un indice 
+% interactivo con el que saltar entre coordenadas de las SVs en cuestión de 
+% segundos ha agilizado drásticamente la comprobación de los eventos. 
+% Sin embargo,la herramienta requiere ser used directly from the terminal en 
+% combinación con una alignment view display, lo cual implica tener skills 
+% informáticas mucho más avanzadas que las que se necesitan para pulsar los 
+% botones de la interfáz grafica de usuario de IGV. No obstante, el desarrollador 
+% de GW se mostró bastante abierto ante request de errores y peticiones de 
+% posibles mejoras a través de Github; derivado del trabajo específico con la 
+% herramienta para este proyecto, se le informó de errores asociados a la 
+% instalación de este software a través de Conda, así como se le solicitó como 
+% mejora la posibilidad de exportar visualizaciones de los alineamientos en 
+% formato vectorial para añadirlos como figuras en este trabajo [link]. 
+
+% GW es la ostia e IGV una mierda ¡Benckmarks!
+
+\section{Future Directions}
+
+The development of robust tools for SV analysis in cancer genomes requires 
+extensive testing and validation. While this study evaluated SV detection 
+capabilities using synthetic data across different sequencing coverages, 
+it primarily demonstrates the value of generating simulated datasets for 
+benchmarking existing tools, developing new algorithms, and training machine 
+learning models. These computational advances ultimately contribute to 
+improving cancer genomics analysis in clinical settings.
+
+% The advancement of cancer patient care requires comprehensive genomic analysis 
+% tools capable of identifying complex structural variants. While this study 
+% evaluated SV detection capabilities using synthetic data across different 
+% sequencing coverages, several critical challenges and opportunities for 
+% improvement have emerged that could enhance clinical applications.
+
+A primary challenge lies in identifying structural events that, despite 
+existing in the template genome, remained undetected in alignments. The 
+unaligned reads in FASTQ format will be valuable for expanding benchmarks to 
+include long-read aligners beyond minimap2, enabling more comprehensive tool 
+evaluation. This expansion is crucial for improving the reliability of genomic 
+analysis in clinical settings.
+
+To enhance the exploration of SVs in cancer, future work should investigate 
+several key aspects. First, examining the impact of read length on Sniffles2 and 
+SVision-pro's calling capabilities, starting with sizes successfully identified 
+in their published work. Second, introducing tumor heterogeneity through 
+multiple clone combinations in synthetic sequencing data would better reflect 
+real tumor complexities and allow evaluation of how varying VAFs affect SV 
+detection capabilities. Third, exploring ultra-long read protocol parameters 
+could help reconstruct previously undetected SVs. Based on our findings and 
+resource efficiency considerations, these tests could focus on 30x and 50x 
+sequencing coverages, aligning with practical clinical sequencing depths.
+
+Data collection automation represents another critical area for improvement in 
+clinical implementation. Currently, computational performance statistics are 
+manually extracted from Slurm logs, a time-consuming process that could be 
+streamlined through automated scripts. In anticipation of future evaluations, 
+we have requested VISOR toolkit enhancements to log all parameters, both 
+specified and default, facilitating automated tracking of simulation 
+characteristics \cite{noauthor_add_nodate}. Additionally, The implementation of 
+Truvari, a comprehensive toolkit for benchmarking, merging, 
+and annotating structural variants from VCF files, would enhance the workflow
+\cite{english_truvari_2022}. Its capabilities make it 
+particularly suitable for analyzing tumor genome evolution through longitudinal 
+sequencing and SV calling analysis.
+
+Continuous communication with tool developers remains essential for optimizing 
+clinical applications, sharing synthetic data experiences, and facilitating 
+potential improvements. In this context, frequent requests for GW enhancements, 
+particularly regarding data visualization and high-quality figure export 
+capabilities, will support better clinical result interpretation and 
+documentation.
+
+Most critically, the experience gained through synthetic data analysis must be 
+validated on ONT-sequenced tumor-normal paired patient samples, integrating 
+structural variation analysis with SNVs and methylation data. This comprehensive 
+genomic characterization approach aims to provide clinicians with more accurate 
+and complete information for personalized cancer treatment decisions, ultimately 
+improving patient outcomes through better-informed therapeutic strategies.
+
+% This study evaluated the detection capabilities of various structural variants 
+% across different sequencing coverages using synthetic data. A key challenge 
+% ahead lies in identifying structural events that, despite existing in the 
+% template genome, remained undetected in alignments. The unaligned reads in 
+% FASTQ format will be valuable for expanding benchmarks to include long-read 
+% aligners beyond minimap2, enabling comprehensive tool evaluation.
+
+% To investigate Sniffles2 and SVision-pro's underwhelming performance, future 
+% work should examine the impact of read length on their calling capabilities. 
+% This could be achieved by generating new simulation sets maintaining the same 
+% SVs but varying their lengths, starting with sizes successfully identified in 
+% their published work. Additionally, introducing tumor heterogeneity through 
+% multiple clone combinations in synthetic sequencing data would allow evaluation 
+% of how varying Variant Allele Frequencies affect SV detection capabilities. 
+% Furthermore, simulating parameters equivalent to ultra-long read protocols 
+% could help assess their potential for reconstructing SVs that remained 
+% undetected in current alignments. Based on our current findings and considering 
+% computational and storage efficiency, these tests could focus on 30x and 50x 
+% sequencing coverages.
+
+% To investigate Sniffles2 and SVision-pro's underwhelming performance, future 
+% work should examine the impact of read length on their calling capabilities. 
+% This could be achieved by generating new simulation sets maintaining the same 
+% SVs but varying their lengths; empezando desde tamaños asquibles que han 
+% mostrado ser capaces de identificar según sus publicaciones. Additionally, 
+% introducing tumor heterogeneity through multiple clone combinations in synthetic 
+% sequencing data would allow evaluation of how varying Variant Allele Frequencies 
+% affect SV detection capabilities. Otro elemento interesante sería secuenciar con
+% parámetros equivalentes a secuenciar con protocolos de ultra long reads y ver
+% si esto sirve para reconstruir las SVs que no han podido obtenerse en los 
+% alineamientos.Based on our current findings and considering 
+% computational and storage efficiency, these tests could focus on 30x and 50x 
+% sequencing coverages.
+
+% % To investigate Sniffles2 and SVision-pro's underwhelming performance, future 
+% % work should examine the impact of read length on their calling capabilities. 
+% % This could be achieved by generating new simulation sets maintaining the same 
+% % SVs but varying their lengths. Otra variable interesante a introducir es la 
+% % heterogeneidad tumoral combinando variedad de clones a los datos sintéticos de
+% % secuenciación para evaluar la variación de las Variant Allele Frecuencies en 
+% % la capacidad de detección en los  SV callers. Based on our current findings and 
+% % considering computational and storage efficiency, these tests could focus on 30x 
+% % and 50x sequencing coverages.
+
+% Data collection automation represents another critical area for improvement. 
+% Currently, computational performance statistics from all tools are manually 
+% extracted from SLURM logs, a time-consuming process that could be streamlined 
+% through automated scripts. Como anticipación a estas posibles pruebas, se 
+% solicitó la mejora de VISOR toolkit consistente en imprimir en los ficheros log 
+% todos los parámetros, sean especificados o por defecto, para automatizar y 
+% mantener registro de las características de cada simulación. Based on our current 
+% findings and considering computational and storage efficiency, these tests could 
+% focus on 30x and 50x sequencing coverages.Additionally, implementing Truvari, a 
+% toolkit for benchmarking, merging, and annotating Structural Variants from VCF 
+% files, could enhance analysis capabilities and potentially support tumor genome 
+% evolution studies through sequencing and SV calling.
+
+% Ongoing communication with tool developers remains essential for both receiving 
+% guidance on optimal tool usage and sharing synthetic data experiences to 
+% facilitate potential improvements and bug fixes. In this context, continued 
+% requests for GW enhancements, particularly regarding data visualization and 
+% high-quality figure export capabilities, will be valuable for future analyses.
+
+% % acidad de calling de ambas herramientas. Para ello, 
+% % una aproximación interesante sería generar nuevos sets de simulaciones con las
+% % mismas SVs, donde la diferencia estaría en la longitud de estos eventos. Para
+% % estas pruebas, en base a los resultados previos y el ahorro significativo en
+% % computación y almacenamiento los datos sintéticos podrían ser generados 
+% % únicamente a coberturas de secuenciación 30x y 50x.
+
+% % La automatización en la recolección de los datos es otro elemento crítico en 
+% % el que se necesita trabajar para poder seguir avanzando en la generación de los
+% % benchmarks. Las estadísticas de rendimiento computacional de todas las 
+% % herramientas utilizadas en este trabajo fueron recogidas manualmente de los 
+% % logs generados por SLURM, lo cual supuso un tiempo bastante considerable que 
+% % podría ahorrarse a través de la generación de scripts que se encarguen de esta 
+% % tarea. Otro elemento que sería interesante de implementar sería Truvari, un 
+% % toolkit for benchmarking, merging, and annotating Structural Variants a partir 
+% % de ficheros VCF, el cual en base a sus funcionalidades podría servir también
+% % para analizar la evolución de genomas tumorales a partir de secuenciación y
+% % SV calling.
+
+% % El contacto con los desarrolladores de todas las herramientas será crucial
+% % tanto para recibir feedback de cómo hacer usos adecuados de las herramientas 
+% % como compartir la experiencia con los datos sintéticos de cara a posibles 
+% % mejoras y correcciones de errores. En relación con esto será interesante seguir
+% % solicitando mejoras de GW, especialmente aquellas relacionadas con visualización
+% % de los datos que luego puedan ser exportados to get high quality figures.En este trabajo a partir de los datos sintéticos se evaluó la capacidad de 
+% % detección de diferentes tipos de grandes eventos estructurales ante diferentes
+% % coverturas de secuenciación. Un próximo reto interesante será conseguir
+% % que aquellos eventos estructurales que aun existiendo el genoma molde de las
+% % lecturas no consiguieron avistarse luego en los alineamientos. Para esto serán
+% % de gran ayuda las unaligned reads in FASTQ format, que permitirán añadir a los
+% % benchmarks otros alineadores de lecturas largas distintos de minimap2 para 
+% % evaluar también este tipo de herramientas. 
+
+% % Para profundizar en la búsqueda de razones de los malos resultados de Sniffles2
+% % y SVision-pro, será interesante estudiar el efecto de la longitud de las 
+% % lecturas sobre la cap
+
+% Most importantly, the experience gained through synthetic data analysis needs to 
+% be applied and validated on ONT-sequenced tumor-normal paired patient samples, 
+% integrating structural variation analysis with SNP and methylation data.
+
+% % Por último, pero lo más importante, se requiere utilizar y validar la 
+% % experiencia adquirida con datos sintéticos en el análisis de tumour-normal
+% % paired samples of patients  secuenciados mediante ONT, integrando la variación 
+% % estructural junto con los datos de SNPs y metilación.
+
+
+

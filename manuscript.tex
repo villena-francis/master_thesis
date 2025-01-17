@@ -1,0 +1,186 @@
+\documentclass[12pt,a4paper,twoside]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{ragged2e}
+\usepackage{parskip}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{titlesec}
+\usepackage{textcomp}
+\usepackage{enumitem}
+\usepackage{newunicodechar}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{xltabular}
+\usepackage{ragged2e}
+\usepackage{caption}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage[table]{xcolor}
+\usepackage[helvetica]{quotchap}
+\usepackage[font=normalsize,labelfont={bf}]{caption}
+\usepackage[backend=biber, style=ieee, giveninits=true]{biblatex}
+\usepackage{appendix}
+
+% Margins
+\geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+
+% Add blankpages
+\newcommand{\blankpage}{
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\newpage
+}
+
+% Add references
+\addbibresource{refs.bib}
+\setlength\bibitemsep{\baselineskip}
+\DeclareFieldFormat{urldate}{}
+
+% Font color
+\definecolor{indigo}{HTML}{1F497D}
+
+% Font for tables
+\definecolor{lightgray}{HTML}{EEEEEE}
+
+
+% Change chapter format
+% \titleformat{\chapter}
+% {\normalfont\LARGE\bfseries}{\thechapter.}{1em}{}
+\renewcommand{\sectfont}{\bfseries}
+\renewcommand{\chapterheadstartvskip}
+
+
+
+% Trademark symbol as a superscript
+\newcommand{\regsup}{\textsuperscript{\textregistered}}
+
+% Tiny textbullet
+\newunicodechar{•}{\textbullet}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black, 
+    citecolor=black, 
+    urlcolor=blue    
+}
+
+\captionsetup{font=footnotesize}
+
+% COOL INDICATOR FOR PAGES
+% Gray boxes for chapter numbering on pages
+% \usepackage[contents={},opacity=1,scale=1,color=white]{background}
+% \usepackage{tikzpagenodes}
+% \usepackage{totcount}
+% \usetikzlibrary{calc}
+
+% \newif\ifMaterial
+
+% \newlength\LabelSize
+% \setlength\LabelSize{2cm}
+
+% \AtBeginDocument{%
+% \regtotcounter{chapter}
+% %\setlength\LabelSize{\dimexpr\textheight/\totvalue{chapter}\relax}
+% \ifdim\LabelSize>3.5cm\relax
+%   \global\setlength\LabelSize{3.5cm}
+% \fi}
+
+% \newcommand\AddLabels{%
+%     \Materialtrue%
+%     \AddEverypageHook{%
+%         \ifMaterial%
+%         \ifodd\value{page} %
+%         \backgroundsetup{
+%           angle=0, 
+%           position={current page.east|-current page text area.north  east}, 
+%           vshift=-\thechapter*\LabelSize, 
+%           hshift=-10mm,
+%           contents={%
+%           \tikz\node[fill=black,anchor=west,text width=\LabelSize,align=center,text height=15pt,text depth=10pt,font=\large\sffamily\bf] {\thechapter};  }%
+%         }
+%          \else
+%          \backgroundsetup{
+%           angle=0, 
+%           position={current page.west|-current page text area.north west}, 
+%           vshift=-\thechapter*\LabelSize, 
+%           hshift=10mm,
+%           contents={%
+%           \tikz\node[fill=black,anchor=west,text width=\LabelSize,
+%           align=center,
+%           text height=15pt,
+%           text depth=10pt,
+%           font=\large\sffamily\bf] {\thechapter}; }%
+%          }
+%      \fi
+%      \BgMaterial%
+%      \else\relax\fi}%
+% }
+
+% \newcommand\RemoveLabels{\Materialfalse}
+% \usepackage{afterpage}
+% \newcommand\RemoveThisLabel{%
+%     \Materialfalse
+%     \afterpage{\global\Materialtrue}%
+% }
+
+
+
+% Parts of the document
+\begin{document}
+
+\justifying{}
+    % Stop page numbering for preliminary sections
+    \pagenumbering{gobble}
+    \include{1_cover}
+    \blankpage{}
+
+    \include{2_abstract_eng}
+    \blankpage{}
+
+    \include{3_acknowledgements}
+    \blankpage{}
+
+    % Index
+    \tableofcontents
+    \blankpage{}
+
+    \listoffigures
+    \blankpage{}
+
+    \listoftables
+    \blankpage{}
+
+    % Start page numbering
+    \clearpage
+    \pagenumbering{arabic}
+    \setcounter{page}{1}
+    % \AddLabels
+    \include{4_intro}
+
+    
+    \include{5_objetives}
+    \blankpage{}
+
+    \include{6_method}
+
+    \include{7_results}
+    
+    \include{8_discussion}
+
+    \include{9_conclusion}
+    \blankpage{}
+
+    \printbibliography
+    \blankpage{}
+
+    \appendix
+    \setcounter{figure}{0} % Reinicia el contador de figuras
+    \setcounter{table}{0}  % Reinicia el contador de tablas
+    \include{10_supplementary}
+
+\end{document}
