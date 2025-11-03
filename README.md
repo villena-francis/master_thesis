@@ -1,5 +1,7 @@
 # Exploring Structural Variation in Tumor Evolution through Nanopore Sequencing 
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17514129.svg)](https://doi.org/10.5281/zenodo.17514129)
+
 Structural variants (SVs) are genomic alterations encompassing deletions, 
 insertions, and segment rearrangements, ranging from kilobases to entire 
 chromosomes. Despite their significance as biomarkers in oncological 
