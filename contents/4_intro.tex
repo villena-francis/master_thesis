@@ -2,12 +2,6 @@
 
 \section{Sequencing Technologies in Cancer Research}
 
-% Las secuencias genómicas ejercen elevada influencia sobre la biología de los 
-% organismos y permiten inferir su historia evolutiva. 
-
-
-% SECUENCIAS GENOMICAS Y MEDICINA DE PRECISIÓN
-
 Genomic sequences significantly influence organismal biology and provide 
 insights into evolutionary history. The application of this genomic knowledge 
 to human health has given rise to precision medicine, a discipline that 
@@ -30,30 +24,6 @@ compete for resources and space \cite{turajlic_resolving_2019}. Tumor DNA
 sequencing enables identification of patient-specific driver mutations, 
 facilitating more effective targeted therapy selection and implementation 
 \cite{sicklick_molecular_2019}.
-
-% Las secuencias genómicas ejercen una elevada influencia sobre la biología de los 
-% organismos y permiten inferir su historia evolutiva. La aplicación de esta 
-% información en el ámbito de la salud humana ha dado lugar a lo que se conoce 
-% como medicina de precisión. Esta disciplina, mediante el uso de marcadores 
-% genéticos y moleculares, permite personalizar los tratamientos médicos, 
-% adaptándolos a las características individuales de cada paciente. Gracias a los 
-% avances en las plataformas de secuenciación y de herramientas bioinformáticas,
-% es posible identificar variaciones genéticas que predisponen a ciertas 
-% enfermedades y diseñar terapias específicas que mejoran la eficacia y reducen 
-% los efectos secundarios.
-
-% En el contexto del cáncer, los análisis genómicos han revolucionado nuestra 
-% comprensión y abordaje terapéutico de la enfermedad. El cáncer, que engloba 
-% más de 100 tipos diferentes según el Instituto Nacional del Cáncer (NCI), surge 
-% cuando las células normales experimentan alteraciones genéticas y/o epigenéticas 
-% que las llevan a proliferar de forma descontrolada, comprometiendo la 
-% homeostasis del organismo. Su desarrollo es un proceso complejo que resulta de 
-% la interacción entre el genotipo del individuo y diversos factores ambientales, 
-% dando lugar a una evolución clonal donde distintas subpoblaciones de células 
-% malignas compiten por recursos y espacio. La secuenciación del ADN tumoral 
-% permite identificar las mutaciones específicas que impulsan el crecimiento 
-% canceroso en cada paciente, facilitando la selección de terapias dirigidas más 
-% efectivas.
 
 DNA sequencing methods have evolved significantly over the years, with current 
 technologies falling into three main categories:
@@ -117,23 +87,6 @@ often leading to ambiguous or incomplete assemblies
     sequence appears shorter than the actual genome, typically in repetitive 
     regions that are difficult to amplify or are toxic to bacterial cloning, 
     such as simple tandem repeats. Adapted from \cite{chaisson_genetic_2015}.}
-    % \caption[Algunas limitaciones en ensamblajes genómicos con lecturas cortas]{
-    % Algunas limitaciones en ensamblajes genómicos con lecturas cortas. Encima De
-    % cada figura están representadas las regiones a ser resueltas y las zonas
-    % coloreadas de rojo son secuencias repetitivas. En medio de cada figura se 
-    % muestran los alineamientos de lecturas cortas, y abajo del todo se encuentra
-    % la secuencia que se ha sido inferida. (a) Large segmental duplications of 
-    % high sequence identity, in orange and green, make read overlaps ambiguous, leading
-    % to multiple gaps flanking segmental duplications. The effect becomes exacerbated 
-    % if the duplications are structurally polymorphic in a diploid genome. (b)
-    % Satellite-associated gaps are a special case leading to read ‘pileups’ due 
-    % to higher-order tandem arrays of repetitive sequence, These occur primarily in centromeric,
-    % acrocentric and telomeric areas of genomes. (c) Muted gaps arise when the 
-    % assembly is contracted relative to the true genome when overlaps are consistent 
-    % with a smaller representation of the genome. These are often associated with
-    % repetitive sequences that cannot be easily amplified and/or are incompatible 
-    % with cloning and propagation (that is, when they are toxic to Escherichia coli), 
-    % such as simple tandem repeats.}
     \label{fig:assembly_gaps}
 \end{figure}
 
@@ -152,19 +105,6 @@ This achievement resolved previously inaccessible genomic regions that remained
 incomplete in the Genome Reference Consortium's human reference version 38 
 (GRCh38), highlighted in red in \textbf{Figure~\ref{fig:T2T_ref}}.
 
-% The advent of Las tecnologías de secuenciación de lecturas largas hace una
-% década con el potencial de superar las limitaciones de las lecturas cortas,
-% and marked a turning point in sequence assembly. Sin embargo, esas long reads 
-% tenían higher error rate (~10\%) than short reads ($<$ 1\%), it was practical to 
-% routinely assemble complete bacterial genome, pero desincentivaba su uso
-% en genómica humana debido a no ser útiles en el análisis de mutaciones puntuales.
-% No obstante, las continuas mejoras de las plataformas de secuenciación basadas
-% en long-reads han ido reduciendo estos error rates, hasta el punto de permitir 
-% generar el primer genoma humano de referencia sin gaps, también denominado 
-% telómero a telómero (T2T), adressing genomic regions remained unresolved in the
-% la versión 38 de la referencia humana lanzada por el Genome Reference Consortium
-% (GRCh38).
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{img/T2T_ref.pdf}
@@ -176,12 +116,6 @@ incomplete in the Genome Reference Consortium's human reference version 38
     arrayed and inverted repeats (IRs), required additional analysis and was 
     published separately in 2023 \cite{rhie_complete_2023}. Adapted from 
     \cite{zahn_filling_2022}.}
-    % \caption[Gaps resolved by T2T assembly]{Gaps resolved by T2T assembly. 
-    % Each bar is a linear visualization of a chromosome, with the chromosome 
-    % number shown at left. Red segments denote previously missing sequences that 
-    % the T2T Consortium resolved in 2022. No se incluye el cromosoma Y, debido
-    % a que fue publicado posteriormente en 2023 debido a su compleja arquitectura,
-    % specifically the presence of large, tandemly arrayed and inverted repeats (IRs).}
     \label{fig:T2T_ref}
 \end{figure}
 
